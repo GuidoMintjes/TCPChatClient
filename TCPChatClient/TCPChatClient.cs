@@ -8,7 +8,7 @@ namespace TCPChatClient {
     public class TCPChatClient {
 
 
-        public static string defaultIP = "145.107.110.146";
+        public static string defaultIP = "172.28.192.1";
         public static int defaultPort = 8900;
         public static int defaultID = 1;
 
@@ -19,6 +19,10 @@ namespace TCPChatClient {
             Console.Title = "TCP Chat Client Demo";
 
             tcp = new TCP(defaultID);
+
+            Console.WriteLine("What is the ip of the server you are trying to connect to?");
+            string ip = Console.ReadLine();
+            defaultIP = ip;
 
             Console.WriteLine("Trying to connect to server on port: " + defaultPort);
             tcp.Connect(defaultIP, defaultPort);
