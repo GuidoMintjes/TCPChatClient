@@ -28,6 +28,6 @@ namespace TCPChatClient {
             tcp.Connect(defaultIP, defaultPort);
 
             Console.Read();
-        }
+        }         
     }
 }
