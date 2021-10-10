@@ -27,6 +27,8 @@ namespace TCPChatClient {
             Console.WriteLine("Trying to connect to server on port: " + defaultPort);
             tcp.Connect(defaultIP, defaultPort);
 
+            ThreadManager.UpdateMainInvoke();
+
             Console.Read();
         }         
     }
