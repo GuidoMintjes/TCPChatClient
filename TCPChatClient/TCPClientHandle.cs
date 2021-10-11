@@ -10,8 +10,8 @@ namespace TCPChatClient {
             string welcomeMSG = packet.PacketReadString(true);
             int thisClientID = packet.PacketReadInt(true);
 
-            Funcs.printMessage(2, welcomeMSG, false);
-            TCPChatClient.instance.clientID = thisClientID;
+            Funcs.printMessage(3, welcomeMSG, false);
+            TCPChatClient.clientID = thisClientID;
         }
     }
 }

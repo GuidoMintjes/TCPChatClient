@@ -201,7 +201,8 @@ namespace TCPChatClient {
             if (buffer.Count > readPointer) {
 
                 int length = PacketReadInt(true);   // Get the length of the string
-                string stringRead = BitConverter.ToString(byteArray, readPointer, length);
+                string stringRead = Encoding.ASCII.GetString(byteArray, readPointer, length);
+
                 if (moveDataPointer)
                     readPointer += length;
 

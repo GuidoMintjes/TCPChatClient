@@ -11,9 +11,9 @@ namespace TCPChatClient {
         public static TCPChatClient instance;
 
         
-        public static string defaultIP = "172.28.192.1";
+        public static string connectIP;
+        public static int connectPort = 8900;
         public static int dataBufferSize = 4096;
-        public static int defaultPort = 8900;
         public static TCP tcp;
 
 
@@ -21,11 +21,9 @@ namespace TCPChatClient {
         private delegate void PacketHandler(Packet packet);
 
 
-        public static int defaultID = 0;
-        public int clientID = 0;
+        public static int clientID = 0;
         
 
-        public static int id;
 
 
         #region Start Program
@@ -34,15 +32,15 @@ namespace TCPChatClient {
 
             Console.Title = "TCP Chat Client Demo";
 
-            tcp = new TCP(defaultID);
+            tcp = new TCP();
 
-            Console.WriteLine("What is the ip of the server you are trying to connect to?");
+            Funcs.printMessage(3, "What is the ip of the server you are trying to connect to?", true);
             string ip = Console.ReadLine();
-            defaultIP = ip;
+            connectIP = ip;
 
             
-            Console.WriteLine("Trying to connect to server on port: " + defaultPort);
-            tcp.Connect(defaultIP, defaultPort);
+            Funcs.printMessage(3, "Trying to connect to server on port: " + connectPort, true);
+            tcp.Connect();
 
             ThreadManager.UpdateMainInvoke();
 
@@ -63,13 +61,7 @@ namespace TCPChatClient {
             private byte[] receiveByteArray;
 
 
-            public TCP(int _id) {
-
-                id = _id;
-            }
-
-
-            public void Connect(string ip, int port) {
+            public void Connect() {
 
                 InitializePacketHandlers();
 
@@ -81,7 +73,7 @@ namespace TCPChatClient {
 
                 receiveByteArray = new byte[dataBufferSize];    // Gets the 'stream' of info provided by the socket
 
-                socket.BeginConnect(ip, port, SocketConnectCallback, socket);
+                socket.BeginConnect(connectIP, connectPort, SocketConnectCallback, socket);
             }
 
 
@@ -100,7 +92,7 @@ namespace TCPChatClient {
 
                 stream.BeginRead(receiveByteArray, 0, dataBufferSize, StreamReceiveCallback, null);
 
-                Console.WriteLine("Connected to server on port: " + TCPChatClient.defaultPort);
+                Funcs.printMessage(3, "Connected to server on port: " + TCPChatClient.connectPort, true);
             }
 
 
@@ -109,7 +101,7 @@ namespace TCPChatClient {
 
                 try {
 
-                    socket.EndConnect(aResult);
+                    //socket.EndConnect(aResult);
 
                     if (!socket.Connected) {
                         return;
@@ -126,9 +118,9 @@ namespace TCPChatClient {
 
                     stream.BeginRead(receiveByteArray, 0, dataBufferSize, StreamReceiveCallback, null);
 
-                } catch {
+                } catch(Exception exc) {
 
-                    Console.WriteLine("Error! ==> disconnecting");
+                    Funcs.printMessage(0, "Error! ==> disconnecting " + exc, false);
                 }
             }
 
@@ -162,11 +154,16 @@ namespace TCPChatClient {
 
                     ThreadManager.ExecuteOnMainThread(() => {
 
-                        Packet packet = new Packet();
+                        using (Packet packet = new Packet()) {
 
-                        int packetID = packet.PacketReadInt(true);
+                            packet.SetPacketBytes(packetBytes);
 
-                        packetHandlers[packetID](packet);
+                            int packetID = packet.PacketReadInt(true);
+
+                            Funcs.printMessage(2, packetBytes.ToString(), false);
+
+                            packetHandlers[packetID](packet);
+                        }
                     });
 
                     packetLength = 0;
