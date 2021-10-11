@@ -18,7 +18,7 @@ namespace TCPChatClient {
             
             if (action == null) {
 
-                Funcs.printMessage(1, "Action could not be put on main thread because it's empty!", false);
+                Funcs.printMessage(1, "Action could not be put on main thread because it's empty!", true);
                 return;
             }
 

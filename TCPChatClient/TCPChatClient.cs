@@ -71,6 +71,7 @@ namespace TCPChatClient {
 
             public void Connect(string ip, int port) {
 
+                InitializePacketHandlers();
 
                 socket = new TcpClient {
                     ReceiveBufferSize = dataBufferSize,
@@ -198,6 +199,8 @@ namespace TCPChatClient {
 
                     { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn }
                 };
+
+                Funcs.printMessage(2, "Packet handler dictionary initiated!", true);
             }
         }
 
