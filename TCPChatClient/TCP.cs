@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
+﻿/*
+using System;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace TCPChatClient {
     public class TCP {
 
         
-        public TcpClient socket;    // Information stored that gets saved in server in the callback method
-        private readonly int id;
+        public static TcpClient socket;    // Information stored that gets saved in server in the callback method
+        public static int id;
 
         private NetworkStream stream;
+        private Packet receivedData;
         private byte[] receiveByteArray;
 
         public static int dataBufferSize = 4096;
+
+        private static Dictionary<int, PacketHandler> packetHandlers;
+        private delegate void PacketHandler(Packet packet);
 
         public TCP(int _id) {
 
@@ -47,27 +50,111 @@ namespace TCPChatClient {
             }
 
             stream = socket.GetStream();
+
+            receivedData = new Packet();
+
             stream.BeginRead(receiveByteArray, 0, dataBufferSize, StreamReceiveCallback, null);
 
             Console.WriteLine("Connected to server on port: " + TCPChatClient.defaultPort);
         }
 
 
+        // Handle stream and socket when the stream is received
         void StreamReceiveCallback(IAsyncResult aResult) {
 
             try {
+
                 socket.EndConnect(aResult);
 
                 if (!socket.Connected) {
                     return;
                 }
 
+                int dataArrayLength = stream.EndRead(aResult);
+                byte[] dataArray = new byte[dataArrayLength];
+
+                Array.Copy(receiveByteArray, dataArray, dataArrayLength);
+
                 stream = socket.GetStream();
+
+                receivedData.NullifyPacket(HandleData(dataArray));
+
                 stream.BeginRead(receiveByteArray, 0, dataBufferSize, StreamReceiveCallback, null);
+
             } catch {
 
                 Console.WriteLine("Error! ==> disconnecting");
             }
         }
+
+
+        // Handles the data and returns a boolean, this is needed because we might not want to always reset the pack
+        private bool HandleData(byte[] dataArray) {
+
+            int packetLength = 0;
+
+            receivedData.SetPacketBytes(dataArray); // Load the data into the Packet instance
+
+
+            // Check if what still needs to be read is an integer or bigger, if so that is the first int of the packet indicating
+            // the length of that packet
+            if(receivedData.GetUnreadPacketSize() >= 4) {
+
+                packetLength = receivedData.PacketReadInt(true);
+
+                // Check if packet size is 0 or less, if so, return true so that the packet will be reset
+                if(packetLength <= 0) {
+
+                    return true;
+                }
+            }
+
+            
+            // While this is true there is still data that needs to be handled
+            while(packetLength > 0 && packetLength <= receivedData.GetUnreadPacketSize()) {
+
+                byte[] packetBytes = receivedData.PacketReadBytes(packetLength, true);
+
+                ThreadManager.ExecuteOnMainThread(() => {
+
+                    Packet packet = new Packet();
+
+                    int packetID = packet.PacketReadInt(true);
+
+                    packetHandlers[packetID](packet);
+                });
+
+                packetLength = 0;
+
+                if (receivedData.GetUnreadPacketSize() >= 4) {
+
+                    packetLength = receivedData.PacketReadInt(true);
+
+                    // Check if packet size is 0 or less, if so, return true so that the packet will be reset
+                    if (packetLength <= 0) {
+
+                        return true;
+                    }
+                }
+            }
+
+
+            if(packetLength <= 1) {
+                return true;
+            }
+
+
+            return false;       // In this case there is still a piece of data in the packet/stream which is part of some data
+                                // in some other upcoming packet, which is why it shouldn't be destroyed
+        }
+
+        private void InitializePacketHandlers() {
+
+            packetHandlers = new Dictionary<int, PacketHandler>() {
+
+                { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn }
+            };
+        }
     }
 }
+*/

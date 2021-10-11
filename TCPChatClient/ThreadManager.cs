@@ -44,9 +44,6 @@ namespace TCPChatClient {
         // Actually run the Actions
         private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e) {
 
-            Funcs.printMessage(2, "test", false);
-
-            /*
             if (actionToExecuteOnMainThread) {
 
                 executeCopiedOnMainThread.Clear();
@@ -63,7 +60,6 @@ namespace TCPChatClient {
                     executeCopiedOnMainThread[i]();
                 }
             }
-            */
         }
     }
 }
