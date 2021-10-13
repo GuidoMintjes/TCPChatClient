@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Timers;
 using System.Collections.Generic;
 
 namespace TCPChatClient {
@@ -10,12 +9,10 @@ namespace TCPChatClient {
         private static readonly List<Action> executeCopiedOnMainThread = new List<Action>();
         private static bool actionToExecuteOnMainThread = false;
 
-        private static double frameTime = 1000 / 60;
-
 
         // Set an Action on the main Thread
         public static void ExecuteOnMainThread(Action action) {
-            
+
             if (action == null) {
 
                 Funcs.printMessage(1, "Action could not be put on main thread because it's empty!", true);
@@ -30,19 +27,7 @@ namespace TCPChatClient {
         }
 
 
-        /// Executes the Actions/code on the main thread
-        public static void UpdateMainInvoke() {
-            
-
-            Timer timer = new Timer(frameTime);
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = true;
-            timer.Enabled = true;
-        }
-
-
-        // Actually run the Actions
-        private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e) {
+        public static void UpdateMain() {
 
             if (actionToExecuteOnMainThread) {
 

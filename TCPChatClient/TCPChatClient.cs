@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Net.Sockets;
 
 
 namespace TCPChatClient {
 
     public class TCPChatClient {
+
+
+        private static bool isRunning = false;
 
         public static TCPChatClient instance;
 
@@ -15,6 +19,9 @@ namespace TCPChatClient {
         public static int connectPort = 8900;
         public static int dataBufferSize = 4096;
         public static TCP tcp;
+
+
+        public static string userName = @"{userName}";
 
 
         private static Dictionary<int, PacketHandler> packetHandlers;
@@ -34,17 +41,49 @@ namespace TCPChatClient {
 
             tcp = new TCP();
 
+            Funcs.printMessage(3, "What is your desired username?", true);
+            string name = Console.ReadLine();
+            userName = name;
+
+
             Funcs.printMessage(3, "What is the ip of the server you are trying to connect to?", true);
             string ip = Console.ReadLine();
             connectIP = ip;
 
-            
+
             Funcs.printMessage(3, "Trying to connect to server on port: " + connectPort, true);
             tcp.Connect();
 
-            ThreadManager.UpdateMainInvoke();
+            ThreadManager.UpdateMain();
 
-            Console.Read();
+            isRunning = true;           // Set running status to be active
+
+            Thread mainThread = new Thread(new ThreadStart(MainThread));
+            mainThread.Start();
+        }
+
+
+        // Run the logic loop
+        private static void MainThread() {
+
+            Funcs.printMessage(1, $"Main thread with loop started at {Consts.TICKMSDURATION} ms per tick!", false);
+            DateTime nextCycle = DateTime.Now;
+
+            while (isRunning) {
+
+                while (nextCycle < DateTime.Now) {
+
+                    Logic.Update();
+
+                    nextCycle = nextCycle.AddMilliseconds(Consts.TICKMSDURATION);
+
+                    // Fix voor hoge CPU usage
+                    if (nextCycle > DateTime.Now) {
+
+                        Thread.Sleep(nextCycle - DateTime.Now);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -160,8 +199,6 @@ namespace TCPChatClient {
 
                             int packetID = packet.PacketReadInt(true);
 
-                            Funcs.printMessage(2, packetBytes.ToString(), false);
-
                             packetHandlers[packetID](packet);
                         }
                     });
@@ -190,6 +227,7 @@ namespace TCPChatClient {
                                     // in some other upcoming packet, which is why it shouldn't be destroyed
             }
 
+
             private void InitializePacketHandlers() {
 
                 packetHandlers = new Dictionary<int, PacketHandler>() {
@@ -199,8 +237,25 @@ namespace TCPChatClient {
 
                 Funcs.printMessage(2, "Packet handler dictionary initiated!", true);
             }
-        }
 
-        #endregion
+
+            public void TCPSendData(Packet packet) {
+
+                try {
+
+                    if (socket != null) {
+
+                        stream.BeginWrite(packet.GetPacketBytes(), 0, packet.GetPacketSize(), null, null);
+                    }
+
+                } catch (Exception exc) {
+
+                    Funcs.printMessage(0, $"Unable to send data to server through TCP, err msg: {exc}", false);
+                }
+            }
+        }
     }
 }
+
+
+#endregion
