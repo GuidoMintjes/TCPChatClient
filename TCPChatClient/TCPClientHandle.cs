@@ -14,5 +14,21 @@ namespace TCPChatClient {
             TCPChatClient.clientID = thisClientID;
             TCPClientSend.ReceivedWelcome();
         }
+
+
+        public static void DisplayMessage(Packet packet) {
+
+            string message = packet.PacketReadString(true);
+
+            Funcs.printMessage(3, message, false);
+        }
+
+
+        public static void DisplayChat(Packet packet) {
+
+            string message = packet.PacketReadString(true);
+
+            Funcs.printMessage(4, message, false);
+        }
     }
 }

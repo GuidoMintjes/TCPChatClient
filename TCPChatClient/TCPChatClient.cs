@@ -113,6 +113,8 @@ namespace TCPChatClient {
                 receiveByteArray = new byte[dataBufferSize];    // Gets the 'stream' of info provided by the socket
 
                 socket.BeginConnect(connectIP, connectPort, SocketConnectCallback, socket);
+
+                NetworkCommand.CommandLoop();
             }
 
 
@@ -137,6 +139,8 @@ namespace TCPChatClient {
 
             // Handle stream and socket when the stream is received
             void StreamReceiveCallback(IAsyncResult aResult) {
+
+                Console.WriteLine("Stream received!");
 
                 try {
 
@@ -191,7 +195,7 @@ namespace TCPChatClient {
 
                     byte[] packetBytes = receivedData.PacketReadBytes(packetLength, true);
 
-                    ThreadManager.ExecuteOnMainThread(() => {
+                    //ThreadManager.ExecuteOnMainThread(() => {
 
                         using (Packet packet = new Packet()) {
 
@@ -201,7 +205,7 @@ namespace TCPChatClient {
 
                             packetHandlers[packetID](packet);
                         }
-                    });
+                    //});
 
                     packetLength = 0;
 
@@ -232,7 +236,9 @@ namespace TCPChatClient {
 
                 packetHandlers = new Dictionary<int, PacketHandler>() {
 
-                    { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn }
+                    { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn },
+                    { (int) ServerPackets.message, TCPClientHandle.DisplayMessage },
+                    { (int) ServerPackets.chat, TCPClientHandle.DisplayChat }
                 };
 
                 Funcs.printMessage(2, "Packet handler dictionary initiated!", true);

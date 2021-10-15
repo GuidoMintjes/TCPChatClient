@@ -9,6 +9,7 @@ namespace TCPChatClient {
         private static string warningAlert = "[WARNING] ";
         private static string messageAlert = "[MSG] ";
         private static string serverAlert = "[SERVER] ";
+        private static string chatAlert = "[CHAT] ";
 
         private static bool allowTypeWrite = false;
 
@@ -57,6 +58,16 @@ namespace TCPChatClient {
 
                         break;
 
+                    case 4:
+                        string msgChat = chatAlert + "{" + DateTime.Now.ToString("HH:mm:ss") + "} " + message;
+
+                        if (typeWrite)
+                            slowType(msgChat, 3);
+                        else
+                            Console.WriteLine(msgChat);
+
+                        break;
+
                     default:
                         break;
                 }
@@ -89,6 +100,14 @@ namespace TCPChatClient {
                         string msgServer = serverAlert + "{" + DateTime.Now.ToString("HH:mm:ss") + "} " + message;
 
                         Console.WriteLine(msgServer);
+
+                        break;
+
+
+                    case 4:
+                        string msgChat = chatAlert + "{" + DateTime.Now.ToString("HH:mm:ss") + "} " + message;
+
+                        Console.WriteLine(msgChat);
 
                         break;
 
