@@ -21,7 +21,7 @@ namespace TCPChatClient {
                             commandRaw = Console.ReadLine();
                             Console.WriteLine();
 
-                            SendMessage(commandRaw);
+                            SendMessage("<" + TCPChatClient.userName + "> " + commandRaw);
                             break;
                         default:
                             break;
