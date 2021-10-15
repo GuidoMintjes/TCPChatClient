@@ -140,8 +140,6 @@ namespace TCPChatClient {
             // Handle stream and socket when the stream is received
             void StreamReceiveCallback(IAsyncResult aResult) {
 
-                Console.WriteLine("Stream received!");
-
                 try {
 
                     //socket.EndConnect(aResult);
