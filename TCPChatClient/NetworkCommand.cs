@@ -17,7 +17,7 @@ namespace TCPChatClient {
                     switch (key.Key) {
                         case ConsoleKey.Enter:
                             Console.WriteLine();
-                            Funcs.printMessage(3, "Input chat message:", false);
+                            Funcs.printMessage(4, "Input chat message:", false);
                             commandRaw = Console.ReadLine();
                             Console.WriteLine();
 
