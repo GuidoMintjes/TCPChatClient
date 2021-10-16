@@ -127,6 +127,10 @@ namespace TCPChatClient {
         /// </summary>
         /// <param name="_intValue"> The actual integer value that is added to the packet (4 bytes) </param>
         public void PacketWrite(int _intValue) {
+
+
+            Console.WriteLine(_intValue.ToString() + " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
+
             buffer.AddRange(BitConverter.GetBytes(_intValue));
         }
 
@@ -134,10 +138,10 @@ namespace TCPChatClient {
         // Add a string to the packet/datastream
         public void PacketWrite(string _stringValue) {
 
-            PacketWrite(_stringValue.Length);   // A string isn't always the same size, which is why the length of the string
-                                                // has to be added to the datastream, so the other end knows how long to read
-                                                // keep reading for just the string, an integer is always 4 bytes
-            buffer.AddRange(Encoding.ASCII.GetBytes(_stringValue)); // Add to the packet/datastream the string itself
+            PacketWrite(Encoding.Unicode.GetByteCount(_stringValue));   // A string isn't always the same size, which is why the length of the string
+                                                                        // has to be added to the datastream, so the other end knows how long to read
+                                                                        // keep reading for just the string, an integer is always 4 bytes
+            buffer.AddRange(Encoding.Unicode.GetBytes(_stringValue)); // Add to the packet/datastream the string itself
         }
 
         #endregion
@@ -187,6 +191,9 @@ namespace TCPChatClient {
             if (buffer.Count > readPointer) {
 
                 int intRead = BitConverter.ToInt32(byteArray, readPointer);
+
+                Console.WriteLine(intRead.ToString() + " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
+
                 if (moveDataPointer)
                     readPointer += 4;   // Increase pointer by 4 because an int is 32 bits = 4 bytes
 
@@ -205,7 +212,10 @@ namespace TCPChatClient {
             if (buffer.Count > readPointer) {
 
                 int length = PacketReadInt(true);   // Get the length of the string
-                string stringRead = Encoding.ASCII.GetString(byteArray, readPointer, length);
+
+                Console.WriteLine(readPointer + " " + length + " " + byteArray.Length);
+
+                string stringRead = Encoding.Unicode.GetString(byteArray, readPointer, length);
 
                 if (moveDataPointer)
                     readPointer += length;
