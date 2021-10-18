@@ -189,7 +189,7 @@ namespace TCPChatClient {
 
                     packetLength = receivedData.PacketReadInt(true);
 
-                    Console.WriteLine("Got packet length of: " + packetLength.ToString());
+                    //Console.WriteLine("Got packet length of: " + packetLength.ToString());
 
                     // Check if packet size is 0 or less, if so, return true so that the packet will be reset
                     if (packetLength <= 0) {

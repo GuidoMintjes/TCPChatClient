@@ -35,7 +35,7 @@ namespace TCPChatClient {
         private static void SendMessage(string commandRaw) {
 
             TCPClientSend.TCPSendData(CreateMessagePacket(commandRaw));
-
+            Funcs.printMessage(4, commandRaw, true);
             CommandLoop();
         }
 
