@@ -20,6 +20,7 @@ namespace TCPChatClient {
         public static int dataBufferSize = 4096;
         public static TCP tcp;
 
+        public static bool connected = false;
 
         public static string userName = @"{userName}";
 
@@ -110,6 +111,8 @@ namespace TCPChatClient {
                 };
 
 
+                connected = true;                               // Set the state of this client to being connected
+
                 receiveByteArray = new byte[dataBufferSize];    // Gets the 'stream' of info provided by the socket
 
                 socket.BeginConnect(connectIP, connectPort, SocketConnectCallback, socket);
@@ -145,6 +148,7 @@ namespace TCPChatClient {
                     //socket.EndConnect(aResult);
 
                     if (!socket.Connected) {
+                        Disconnect();
                         return;
                     }
 
@@ -162,6 +166,8 @@ namespace TCPChatClient {
                 } catch(Exception exc) {
 
                     Funcs.printMessage(0, "Error! ==> disconnecting " + exc, false);
+                    Console.WriteLine();
+                    Disconnect();
                 }
             }
 
@@ -267,6 +273,29 @@ namespace TCPChatClient {
 
                     Funcs.printMessage(0, $"Unable to send data to server through TCP, err msg: {exc}", false);
                 }
+            }
+
+
+            public void Disconnect() {
+
+                TCPChatClient.Disconnect();
+
+                stream = null;
+                receiveByteArray = null;
+                receivedData = null;
+                socket = null;
+            }
+        }
+
+
+        public static void Disconnect() {
+
+            if (connected) {
+
+                connected = false;
+                tcp.socket.Close();
+
+                Console.WriteLine("Disconnected from the server!");
             }
         }
     }
