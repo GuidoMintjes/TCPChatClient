@@ -30,7 +30,7 @@ namespace TCPChatClient {
 
         public static int clientID = 0;
         
-
+        public static int countIntegers = 0;
 
 
         #region Start Program
@@ -173,12 +173,23 @@ namespace TCPChatClient {
 
                 receivedData.SetPacketBytes(dataArray); // Load the data into the Packet instance
 
+                /*
+                foreach (byte byt in dataArray) {
+                    Console.Write(Convert.ToString(byt, 2).PadLeft(8, '0'));
+                    Console.Write(" ");
+                }
+
+                Console.WriteLine();
+                */
+
 
                 // Check if what still needs to be read is an integer or bigger, if so that is the first int of the packet indicating
                 // the length of that packet
                 if (receivedData.GetUnreadPacketSize() >= 4) {
 
                     packetLength = receivedData.PacketReadInt(true);
+
+                    Console.WriteLine("Got packet length of: " + packetLength.ToString());
 
                     // Check if packet size is 0 or less, if so, return true so that the packet will be reset
                     if (packetLength <= 0) {
@@ -209,7 +220,7 @@ namespace TCPChatClient {
 
                     if (receivedData.GetUnreadPacketSize() >= 4) {
 
-                        packetLength = receivedData.PacketReadInt(true);
+                        packetLength = receivedData.PacketReadInt(false);
 
                         // Check if packet size is 0 or less, if so, return true so that the packet will be reset
                         if (packetLength <= 0) {

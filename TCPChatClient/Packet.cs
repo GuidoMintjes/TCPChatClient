@@ -190,9 +190,12 @@ namespace TCPChatClient {
 
             if (buffer.Count > readPointer) {
 
+                TCPChatClient.countIntegers++;
+
                 int intRead = BitConverter.ToInt32(byteArray, readPointer);
 
-                Console.WriteLine(intRead.ToString() + " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
+                Console.WriteLine(intRead.ToString() + " read as no. " + TCPChatClient.countIntegers + 
+                    " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
 
                 if (moveDataPointer)
                     readPointer += 4;   // Increase pointer by 4 because an int is 32 bits = 4 bytes
@@ -208,6 +211,7 @@ namespace TCPChatClient {
 
         // Reads a string in the datastream
         public string PacketReadString(bool moveDataPointer) {
+
 
             if (buffer.Count > readPointer) {
 

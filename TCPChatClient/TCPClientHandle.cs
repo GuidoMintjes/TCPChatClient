@@ -7,8 +7,14 @@ namespace TCPChatClient {
         // Confirm that the welcome message has been received (and display)
         public static void WelcomeReturn(Packet packet) {
 
-            int thisClientID = packet.PacketReadInt(true);
+
             string welcomeMSG = packet.PacketReadString(true);
+
+            int thisClientID = packet.PacketReadInt(false);
+
+            Console.WriteLine();
+            Console.WriteLine("Received client ID: " + thisClientID);
+            Console.WriteLine();
 
             Funcs.printMessage(3, welcomeMSG, false);
             TCPChatClient.clientID = thisClientID;
