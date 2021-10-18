@@ -129,7 +129,7 @@ namespace TCPChatClient {
         public void PacketWrite(int _intValue) {
 
 
-            Console.WriteLine(_intValue.ToString() + " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
+            //Console.WriteLine(_intValue.ToString() + " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
 
             buffer.AddRange(BitConverter.GetBytes(_intValue));
         }
@@ -194,8 +194,8 @@ namespace TCPChatClient {
 
                 int intRead = BitConverter.ToInt32(byteArray, readPointer);
 
-                Console.WriteLine(intRead.ToString() + " read as no. " + TCPChatClient.countIntegers + 
-                    " from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
+                //Console.WriteLine(intRead.ToString() + " read as no. " + TCPChatClient.countIntegers + 
+                    //" from: " + (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod());
 
                 if (moveDataPointer)
                     readPointer += 4;   // Increase pointer by 4 because an int is 32 bits = 4 bytes
@@ -216,8 +216,6 @@ namespace TCPChatClient {
             if (buffer.Count > readPointer) {
 
                 int length = PacketReadInt(true);   // Get the length of the string
-
-                Console.WriteLine(readPointer + " " + length + " " + byteArray.Length);
 
                 string stringRead = Encoding.Unicode.GetString(byteArray, readPointer, length);
 
