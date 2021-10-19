@@ -55,6 +55,8 @@ namespace TCPChatClient {
 
         public static void DisplayNames(Packet packet) {
 
+            packet.PacketReadInt(false);
+
             int names;
 
             try {
