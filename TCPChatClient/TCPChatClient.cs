@@ -216,7 +216,7 @@ namespace TCPChatClient {
                         packet.SetPacketBytes(packetBytes);
 
                         int packetID = packet.PacketReadInt(true);
-
+                        /*
                         Console.WriteLine(packetID);
 
                         foreach (byte byt in packet.GetPacketBytes()) {
@@ -224,6 +224,7 @@ namespace TCPChatClient {
                             Console.Write(byt + " ");
                         }
                         Console.WriteLine();
+                        */
                         //Console.WriteLine(packet.readPointer);
 
                         try {

@@ -223,7 +223,14 @@ namespace TCPChatClient {
 
             if (buffer.Count > readPointer) {
 
-                int length = PacketReadInt(true);   // Get the length of the string
+                int length;
+
+                try {
+                    length = PacketReadInt(true);   // Get the length of the string
+                } catch {
+                    length = PacketReadInt(true) - 4;
+                }
+                
 
                 string stringRead = Encoding.Unicode.GetString(byteArray, readPointer, length);
 
