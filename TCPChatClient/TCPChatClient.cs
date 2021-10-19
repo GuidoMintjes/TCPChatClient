@@ -251,9 +251,11 @@ namespace TCPChatClient {
 
                 packetHandlers = new Dictionary<int, PacketHandler>() {
 
+                    { (int) ServerPackets.zero, TCPClientHandle.CatchZeroHandler },
                     { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn },
                     { (int) ServerPackets.message, TCPClientHandle.DisplayMessage },
                     { (int) ServerPackets.chat, TCPClientHandle.DisplayChat },
+                    { (int) ServerPackets.names, TCPClientHandle.DisplayNames },
                     { (int) ServerPackets.connected, TCPClientHandle.DisplayConnected },
                     { (int) ServerPackets.disconnected, TCPClientHandle.DisplayDisconnected }
                 };

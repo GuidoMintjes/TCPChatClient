@@ -11,7 +11,9 @@ namespace TCPChatClient {
             string welcomeMSG = packet.PacketReadString(true);
 
             int thisClientID = packet.PacketReadInt(false);
-            
+
+            Console.Clear();
+
             Funcs.printMessage(3, welcomeMSG, false);
             TCPChatClient.clientID = thisClientID;
             TCPClientSend.ReceivedWelcome();
@@ -48,6 +50,30 @@ namespace TCPChatClient {
             string userName = packet.PacketReadString(true);
 
             Funcs.printMessage(3, $"{userName} has disconnected from this chat room!", false);
+        }
+
+
+        public static void DisplayNames(Packet packet) {
+
+            int names = packet.PacketReadInt(true);
+
+            if (names != 0) {
+                Console.WriteLine();
+                Funcs.printMessage(3, $"These people are already online: ", false);
+
+                for (int i = 1; i <= names; i++) {
+
+                    Funcs.printMessage(3, $"    {packet.PacketReadString(true)}", false);
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+
+        public static void CatchZeroHandler(Packet packet) {
+
+            Funcs.printMessage(0, "Packet handler with id 0 used!", false);
         }
     }
 }
