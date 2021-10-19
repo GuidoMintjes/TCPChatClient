@@ -32,5 +32,22 @@ namespace TCPChatClient {
 
             Funcs.printMessage(4, message, false);
         }
+
+
+        public static void DisplayConnected(Packet packet) {
+
+            string userName = packet.PacketReadString(true);
+
+            Funcs.printMessage(3, $"{userName} has connected to this chat room!", false);
+        }
+
+
+
+        public static void DisplayDisconnected(Packet packet) {
+
+            string userName = packet.PacketReadString(true);
+
+            Funcs.printMessage(3, $"{userName} has disconnected from this chat room!", false);
+        }
     }
 }

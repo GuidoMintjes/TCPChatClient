@@ -253,7 +253,9 @@ namespace TCPChatClient {
 
                     { (int) ServerPackets.welcome, TCPClientHandle.WelcomeReturn },
                     { (int) ServerPackets.message, TCPClientHandle.DisplayMessage },
-                    { (int) ServerPackets.chat, TCPClientHandle.DisplayChat }
+                    { (int) ServerPackets.chat, TCPClientHandle.DisplayChat },
+                    { (int) ServerPackets.connected, TCPClientHandle.DisplayConnected },
+                    { (int) ServerPackets.disconnected, TCPClientHandle.DisplayDisconnected }
                 };
 
                 Funcs.printMessage(2, "Packet handler dictionary initiated!", true);
