@@ -55,11 +55,28 @@ namespace TCPChatClient {
 
         public static void DisplayNames(Packet packet) {
 
-            int names = packet.PacketReadInt(true);
+            int names;
+
+            try {
+                names = packet.PacketReadInt(true);
+            } catch {
+                names = 0;
+                packet.readPointer += 4;
+            }
 
             if (names != 0) {
                 Console.WriteLine();
                 Funcs.printMessage(3, $"These people are already online: ", false);
+
+                /*
+                foreach (byte byt in packet.GetPacketBytes()) {
+
+                    Console.Write(byt);
+                }
+                Console.WriteLine();
+                Console.WriteLine("NameList size: " + packet.GetPacketBytes().Length);
+                */
+
 
                 for (int i = 1; i <= names; i++) {
 
@@ -67,6 +84,9 @@ namespace TCPChatClient {
                 }
 
                 Console.WriteLine();
+            } else {
+
+                Funcs.printMessage(3, "No one else is online yet!", false);
             }
         }
 

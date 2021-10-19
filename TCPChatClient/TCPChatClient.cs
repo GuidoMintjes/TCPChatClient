@@ -210,17 +210,50 @@ namespace TCPChatClient {
 
                     byte[] packetBytes = receivedData.PacketReadBytes(packetLength, true);
 
-                    //ThreadManager.ExecuteOnMainThread(() => {
+                    
+                    using (Packet packet = new Packet()) {
 
-                        using (Packet packet = new Packet()) {
+                        packet.SetPacketBytes(packetBytes);
 
-                            packet.SetPacketBytes(packetBytes);
+                        int packetID = packet.PacketReadInt(true);
 
-                            int packetID = packet.PacketReadInt(true);
+                        Console.WriteLine(packetID);
+
+                        foreach (byte byt in packet.GetPacketBytes()) {
+
+                            Console.Write(byt + " ");
+                        }
+                        Console.WriteLine();
+                        //Console.WriteLine(packet.readPointer);
+
+                        try {
+                            packetHandlers[packetID](packet);
+                        } catch {
+
+                            packetID = packet.PacketReadInt(true);
+                            Console.WriteLine(packetID);
 
                             packetHandlers[packetID](packet);
+
+                            //try {
+                            /*
+                                // This would mean packet ID has not been read right and needs to be read again
+                                packetID = packet.PacketReadInt(true);  
+
+                                foreach (byte byt in packet.GetPacketBytes()) {
+
+                                    Console.Write(byt + " ");
+                                }
+                                Console.WriteLine();
+                                Console.WriteLine(packet.readPointer);
+
+                                packetHandlers[packetID](packet);
+                            */
+                            //} catch {
+                            //    Funcs.printMessage(0, $"Packet does not have a right ID! ID: {packetID}", false);
+                            //}
                         }
-                    //});
+                    }
 
                     packetLength = 0;
 

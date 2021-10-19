@@ -36,7 +36,7 @@ namespace TCPChatClient {
 
         private List<byte> buffer;
         private byte[] byteArray;
-        private int readPointer;
+        public int readPointer;
 
 
         public Packet() {
